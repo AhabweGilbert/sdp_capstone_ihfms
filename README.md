@@ -10,3 +10,7 @@ It encompasses patient management, medical records, and inventory tracking, whil
 1. **Adapter Pattern:** 
 2. **Observer Pattern:** 
 3. **Factory Pattern:** 
+
+Note on Academic vs. Business Orientation:
+
+It is important to emphasize that this project is driven by academic objectives. Therefore, the focus lies on demonstrating the principles and implementations of design patterns in a controlled environment.
