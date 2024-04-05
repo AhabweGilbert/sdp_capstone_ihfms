@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--===Disease Search-->
+    <record id="view_custom_account_filter" model="ir.ui.view">
+        <field name="name">custom.account.select</field>
+        <field name="model">custom.account</field>
+        <field name="arch" type="xml">
+            <search string="Search Account">
+                <field name="code" />
+                <field name="name" />
+                <field name="account_type" />
+            </search>
+        </field>
+    </record>
+
+
+    <!--===Disease
+    Form-->
+    <record id="view_custom_account_form" model="ir.ui.view">
+        <field name="name">custom.account.form</field>
+        <field name="model">custom.account</field>
+        <field name="priority" eval="1" />
+        <field name="arch" type="xml">
+            <form string="Account" create="0">
+                <header>
+
+                </header>
+                <sheet>
+
+
+                    <group>
+                        <group>
+                            <field name="code" />
+                            <field name="name" />
+                        </group>
+                        <group>
+                            <field name="account_type" />
+
+                        </group>
+                    </group>
+
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!--===Disease
+    Tree-->
+    <record id="view_custom_account_tree" model="ir.ui.view">
+        <field name="name">custom.account.tree</field>
+        <field name="model">custom.account</field>
+        <field eval="8" name="priority" />
+        <field name="arch" type="xml">
+            <tree string="Account" create="0">
+
+                <field name="code" />
+                <field name="name" />
+                <field name="account_type" />
+
+            </tree>
+        </field>
+    </record>
+
+
+    <!--===1.
+    (Action) -->
+    <record id="action_custom_account" model="ir.actions.act_window">
+        <field name="name">Accounts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">custom.account</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="view_id" ref="sdp_hospital.view_custom_account_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Accounts
+            </p>
+        </field>
+    </record>
+
+
+</odoo>

@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_medical_patient,access_medical_patient,model_medical_patient,base.group_user,1,1,1,0
+access_disease,access_disease,model_disease,base.group_user,1,1,1,0
+access_health_record,access_health_record,model_health_record,base.group_user,1,1,1,0
+access_medical_prescription,access_medical_prescription,model_medical_prescription,base.group_user,1,1,1,0
+
+access_medical_dosage,access_medical_dosage,model_medical_dosage,base.group_user,1,1,1,0
+access_patient_wizard,access_patient_wizard,model_patient_wizard,base.group_user,1,1,1,0
+
+access_create_account_wizard,access_create_account_wizard,model_create_account_wizard,base.group_user,1,1,1,0
+
+access_custom_account,access_custom_account,model_custom_account,base.group_user,1,1,1,0
+access_custom_journal,access_custom_journal,model_custom_journal,base.group_user,1,1,1,0
+access_custom_journal_line,access_custom_journal_line,model_custom_journal_line,base.group_user,1,1,1,0
+

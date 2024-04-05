@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--===Health Record Search-->
+    <record id="view_health_record_filter" model="ir.ui.view">
+        <field name="name">health.record.select</field>
+        <field name="model">health.record</field>
+        <field name="arch" type="xml">
+            <search string="Search Health Record">
+                <field name="name" />
+                <field name="patient_id" />
+                <field name="disease" />
+
+            </search>
+        </field>
+    </record>
+
+
+    <!--===Health
+    Record
+    Form-->
+    <record id="view_health_record_form" model="ir.ui.view">
+        <field name="name">health.record.form</field>
+        <field name="model">health.record</field>
+        <field name="priority" eval="1" />
+        <field name="arch" type="xml">
+            <form string="Health Record">
+                <header>
+
+                </header>
+                <sheet>
+
+                    <div class="oe_title mb24">
+
+                        <!--name-->
+                        <div class="oe_title">
+                            <label for="name" string="Name" />
+                            <h1>
+                                <field name="name" required="1" />
+
+                            </h1>
+
+
+                        </div>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="patient_id" />
+
+                        </group>
+                        <group>
+                            <field name="disease" />
+
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <!--general
+                        information -->
+                        <page name="gen_info" string="General Information">
+                            <group>
+                                <group>
+
+                                    <field name="medical_history" />
+
+                                </group>
+                                <group>
+                                    <field name="procedures" />
+
+                                </group>
+                            </group>
+                        </page>
+                        <page name="prescriptions" string="Prescriptions">
+                            <field name="prescription_ids">
+                                <tree editable="bottom">
+                                    <field name="product_id" string="Drug" />
+                                    <field name="dosage" />
+                                    <field name="quantity" />
+                                    <field name="unit_price" />
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="total_price" sum="Total"
+                                        options="{'currency_field': 'currency_id'}"
+                                        widget="monetary" />
+
+
+                                </tree>
+                            </field>
+                            <div>
+                                <field name="bill_created" invisible="1"/>
+                                <button name="create_bill" type="object" class="btn btn-success"
+                                    invisible="not prescription_ids or bill_created">Confirm</button>
+                              
+                            </div>
+                        </page>
+
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!--===Health
+    Record
+    Tree-->
+    <record id="view_health_record_tree" model="ir.ui.view">
+        <field name="name">health.record.tree</field>
+        <field name="model">health.record</field>
+        <field eval="8" name="priority" />
+        <field name="arch" type="xml">
+            <tree string="Health Record">
+
+                <field name="name" />
+                <field name="patient_id" />
+                <field name="disease" />
+
+
+            </tree>
+        </field>
+    </record>
+
+
+    <!--===1.
+    (Action) -->
+    <record id="action_health_record" model="ir.actions.act_window">
+        <field name="name">Health Record</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">health.record</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="view_id" ref="sdp_hospital.view_health_record_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Health Record
+            </p>
+        </field>
+    </record>
+
+
+</odoo>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--===Disease Search-->
+    <record id="view_disease_filter" model="ir.ui.view">
+        <field name="name">disease.select</field>
+        <field name="model">disease</field>
+        <field name="arch" type="xml">
+            <search string="Search Disease">
+                <field name="name" />
+            
+            </search>
+        </field>
+    </record>
+
+
+    <!--===Disease
+    Form-->
+    <record id="view_disease_form" model="ir.ui.view">
+        <field name="name">disease.form</field>
+        <field name="model">disease</field>
+        <field name="priority" eval="1" />
+        <field name="arch" type="xml">
+            <form string="Disease">
+                <header>
+
+                </header>
+                <sheet>
+
+
+                    <group>
+                        <group>
+                            <field name="name" />
+                          
+                        </group>
+                        <group>
+                            <field name="description" />
+                           
+                        </group>
+                    </group>
+                   
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!--===Disease
+    Tree-->
+    <record id="view_disease_tree" model="ir.ui.view">
+        <field name="name">disease.tree</field>
+        <field name="model">disease</field>
+        <field eval="8" name="priority" />
+        <field name="arch" type="xml">
+            <tree string="Disease">
+
+                <field name="name" />
+                
+
+            </tree>
+        </field>
+    </record>
+
+
+    <!--===1.
+    (Action) -->
+    <record id="action_diseases" model="ir.actions.act_window">
+        <field name="name">Disease</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">disease</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="view_id" ref="sdp_hospital.view_disease_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Disease
+            </p>
+        </field>
+    </record>
+
+
+</odoo>

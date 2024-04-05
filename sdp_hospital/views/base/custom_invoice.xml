@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--===Invoices Search-->
+    <record id="view_custom_invoice_filter" model="ir.ui.view">
+        <field name="name">custom.journal.select</field>
+        <field name="model">custom.journal</field>
+        <field name="arch" type="xml">
+            <search string="Search Invoice">
+                <field name="name" />
+                <field name="patient_id" />
+              
+            </search>
+        </field>
+    </record>
+
+
+    <!--===Health
+    Record
+    Form-->
+    <record id="view_custom_invoice_form" model="ir.ui.view">
+        <field name="name">custom.journal.form</field>
+        <field name="model">custom.journal</field>
+        <field name="priority" eval="1" />
+        <field name="arch" type="xml">
+            <form string="Invoice">
+                <header>
+                    <button name="action_confirm" class="btn btn-success" string="Confirm"
+                        invisible="state != 'draft'" type="object" />
+                    <button name="action_register_payment" class="btn btn-success" string="Register Payment"
+                        invisible="state != 'confirmed' or paid" type="object" />
+                    <button name="action_reset_to_draft" string="Reset to Draft"
+                        invisible="state == 'draft' or paid" type="object" />
+
+                    <button name="action_cancel" class="btn btn-danger" string="Cancel"
+                        invisible="state != 'draft'"
+                        type="object" />
+                    <field name="state"
+                        widget="statusbar" />
+                        <field name="paid" invisible="1"/>
+                </header>
+                <sheet>
+
+                    <div class="oe_title mb24">
+
+                        <!--name-->
+                        <div class="oe_title">
+                            <label for="name" string="Name" />
+                            <h1>
+                                <field name="name" required="1" />
+
+                            </h1>
+
+
+                        </div>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="patient_id" />
+
+                        </group>
+                        <group>
+                            <field name="create_date" string="Invoice Date" />
+
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <!--general
+                        information -->
+                        
+                        <page name="prescriptions" string="Drugs">
+                            <field name="product_line_ids" readonly="state!='draft'">
+                                <tree editable="bottom" >
+                                    <field name="product_id" string="Drug" />
+                                    <field name="dosage" />
+                                    <field name="quantity" />
+                                    <field name="unit_price" />
+                                    <field name="currency_id" column_invisible="1" />
+                                    <field name="total_price" sum="Total"
+                                        options="{'currency_field': 'currency_id'}"
+                                        widget="monetary" />
+
+
+                                </tree>
+                            </field>
+                            
+                        </page>
+                        <page name="journal_items" string="Journal Items">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="name" />
+                                    <field name="account_id" />
+                                    <field name="debit" sum="Total"
+                                        options="{'currency_field': 'currency_id'}"
+                                        widget="monetary" />
+                                    <field name="credit" sum="Total"
+                                        options="{'currency_field': 'currency_id'}"
+                                        widget="monetary" />
+                                    <field name="currency_id" column_invisible="1" />
+                                </tree>
+                            </field>
+
+                        </page>
+
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!--===Health
+    Record
+    Tree-->
+    <record id="view_custom_invoice_tree" model="ir.ui.view">
+        <field name="name">custom.journal.tree</field>
+        <field name="model">custom.journal</field>
+        <field eval="8" name="priority" />
+        <field name="arch" type="xml">
+            <tree string="Invoices">
+
+                <field name="name" />
+                <field name="patient_id" />
+                <field name="create_date" string="Invoice Date" />
+                <field name="state"
+                    widget="badge"
+                    decoration-success="state == 'confirmed'"
+                    decoration-danger="state == 'cancelled'"
+                    decoration-warning="state == 'draft'"
+                />
+
+
+            </tree>
+        </field>
+    </record>
+
+
+    <!--===1.
+    (Action) -->
+    <record id="action_custom_invoice" model="ir.actions.act_window">
+        <field name="name">Invoices</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">custom.journal</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="view_id" ref="sdp_hospital.view_custom_invoice_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Invoices
+            </p>
+        </field>
+    </record>
+
+
+</odoo>

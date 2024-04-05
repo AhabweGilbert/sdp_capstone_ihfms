@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_hospital_root" action="action_patients"
+        name="IHFMS" sequence="-10" />
+    <menuitem
+        id="menu_hospital_patients" action="action_patients"
+        name="Patients" sequence="1" parent="menu_hospital_root" />
+
+    <menuitem
+        id="menu_hospital_health_record" action="action_health_record"
+        name="Health Record" sequence="8" parent="menu_hospital_root" />
+
+    <menuitem
+        id="menu_hospital_disease" action="action_diseases"
+        name="Diseases" sequence="10" parent="menu_hospital_root" />
+
+    <menuitem
+        id="menu_hospital_drugs" action="stock.product_template_action_product"
+        name="Drugs" sequence="11" parent="menu_hospital_root" />
+    <menuitem
+        id="menu_hospital_accounting"
+        name="Accounting" sequence="12" parent="menu_hospital_root" />
+    <menuitem
+        id="menu_hospital_accounting_invoices" action="action_custom_invoice"
+        name="Invoices" sequence="1" parent="menu_hospital_accounting" />
+    <menuitem
+        id="menu_hospital_accounting_accounts" action="action_custom_account"
+        name="Accounts" sequence="1" parent="menu_hospital_accounting" />
+    <menuitem id="menu_hospital_accounting_create_accounts" action="create_account_wizard_action"
+        name="Create Account" sequence="10" parent="menu_hospital_accounting" />
+    <menuitem
+        id="menu_fetch_external_data" action="patient_wizard_action"
+        name="External Patient" sequence="13" parent="menu_hospital_root" />
+
+</odoo> 
