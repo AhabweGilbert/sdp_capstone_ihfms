@@ -32,6 +32,33 @@ class ReceivableFactory(AccountFactory):
     def create_account(self, **kwargs):
         return super().create_account('asset_receivable', **kwargs)
 
+class IncomeFactory(AccountFactory):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def create_account(self, **kwargs):
+        return super().create_account('income', **kwargs)
+
+class AssetFactory(AccountFactory):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def create_account(self, **kwargs):
+        return super().create_account('asset_current', **kwargs)
+
+class ExpenseFactory(AccountFactory):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def create_account(self, **kwargs):
+        return super().create_account('expense', **kwargs)
+
+class AssetCashFactory(AccountFactory):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def create_account(self, **kwargs):
+        return super().create_account('asset_cash', **kwargs)
 
 class PayableFactory(AccountFactory):
     def __init__(self, env):

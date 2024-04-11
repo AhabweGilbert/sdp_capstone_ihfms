@@ -8,7 +8,7 @@
             <search string="Search Invoice">
                 <field name="name" />
                 <field name="patient_id" />
-              
+
             </search>
         </field>
     </record>
@@ -26,7 +26,8 @@
                 <header>
                     <button name="action_confirm" class="btn btn-success" string="Confirm"
                         invisible="state != 'draft'" type="object" />
-                    <button name="action_register_payment" class="btn btn-success" string="Register Payment"
+                    <button name="action_register_payment" class="btn btn-success"
+                        string="Register Payment"
                         invisible="state != 'confirmed' or paid" type="object" />
                     <button name="action_reset_to_draft" string="Reset to Draft"
                         invisible="state == 'draft' or paid" type="object" />
@@ -36,10 +37,11 @@
                         type="object" />
                     <field name="state"
                         widget="statusbar" />
-                        <field name="paid" invisible="1"/>
+                    <field name="paid" invisible="1" />
                 </header>
                 <sheet>
-
+                    <widget name="web_ribbon" title="Paid" bg_color="bg-success"
+                        invisible="not paid" />
                     <div class="oe_title mb24">
 
                         <!--name-->
@@ -66,10 +68,10 @@
                     <notebook colspan="4">
                         <!--general
                         information -->
-                        
+
                         <page name="prescriptions" string="Drugs">
                             <field name="product_line_ids" readonly="state!='draft'">
-                                <tree editable="bottom" >
+                                <tree editable="bottom">
                                     <field name="product_id" string="Drug" />
                                     <field name="dosage" />
                                     <field name="quantity" />
@@ -82,13 +84,14 @@
 
                                 </tree>
                             </field>
-                            
+
                         </page>
                         <page name="journal_items" string="Journal Items">
-                            <field name="line_ids">
+                            <field name="line_ids" readonly="1">
                                 <tree editable="bottom">
-                                    <field name="name" />
+                                    <!-- <field name="name" /> -->
                                     <field name="account_id" />
+                                    <field name="label" />
                                     <field name="debit" sum="Total"
                                         options="{'currency_field': 'currency_id'}"
                                         widget="monetary" />
@@ -136,6 +139,27 @@
             </tree>
         </field>
     </record>
+    <record id="view_custom_journal_line_tree" model="ir.ui.view">
+        <field name="name">custom.journal.line.tree</field>
+        <field name="model">custom.journal.line</field>
+        <field eval="8" name="priority" />
+        <field name="arch" type="xml">
+            <tree string="GL" create="0">
+
+                <field name="account_id" />
+                <field name="label" />
+                <field name="debit" sum="Total"
+                    options="{'currency_field': 'currency_id'}"
+                    widget="monetary" />
+                <field name="credit" sum="Total"
+                    options="{'currency_field': 'currency_id'}"
+                    widget="monetary" />
+                <field name="currency_id" column_invisible="1" />
+
+
+            </tree>
+        </field>
+    </record>
 
 
     <!--===1.
@@ -145,6 +169,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">custom.journal</field>
         <field name="view_mode">tree,form,search</field>
+        <field name="domain">[('journal_type', '=', 'invoice')]</field>
         <field name="view_id" ref="sdp_hospital.view_custom_invoice_tree" />
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -152,6 +177,30 @@
             </p>
         </field>
     </record>
-
+    <record id="action_custom_payments" model="ir.actions.act_window">
+        <field name="name">Invoices</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">custom.journal</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="domain">[('journal_type', '=', 'payment')]</field>
+        <field name="view_id" ref="sdp_hospital.view_custom_invoice_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Invoices
+            </p>
+        </field>
+    </record>
+    <record id="action_custom_general_ledger" model="ir.actions.act_window">
+        <field name="name">General Ledger</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">custom.journal.line</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="view_id" ref="sdp_hospital.view_custom_journal_line_tree" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                General Ledger
+            </p>
+        </field>
+    </record>
 
 </odoo>

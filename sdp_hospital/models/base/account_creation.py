@@ -1,10 +1,14 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError, UserError
-from odoo.addons.sdp_hospital.models.patterns.factory import ReceivableFactory, PayableFactory
+from odoo.addons.sdp_hospital.models.patterns.factory import ReceivableFactory, PayableFactory, AssetFactory, IncomeFactory, ExpenseFactory, AssetCashFactory
 
 ACCOUNT_TYPES = {
     'asset_receivable': ReceivableFactory,
-    'liability_payable': PayableFactory
+    'liability_payable': PayableFactory,
+    'income':IncomeFactory,
+    'asset_cash':AssetCashFactory,
+    'asset_current':AssetFactory,
+    'expense':ExpenseFactory,
 }
 class CreateAccountWizard(models.TransientModel):
     _name = 'create.account.wizard'
@@ -16,6 +20,7 @@ class CreateAccountWizard(models.TransientModel):
         ('asset_receivable', 'Accounts Receivable'),
         ('liability_payable', 'Accounts Payable'),
         ("income", "Income"),
+        ("asset_cash", "Cash"),
         ("asset_current", "Current Assets"),
         ("expense", "Expenses"),
     ], string="Account Type",required=True)

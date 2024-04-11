@@ -25,12 +25,18 @@
         id="menu_hospital_accounting_invoices" action="action_custom_invoice"
         name="Invoices" sequence="1" parent="menu_hospital_accounting" />
     <menuitem
+        id="menu_hospital_accounting_payments" action="action_custom_payments"
+        name="Payments" sequence="2" parent="menu_hospital_accounting" />
+    <menuitem
         id="menu_hospital_accounting_accounts" action="action_custom_account"
-        name="Accounts" sequence="1" parent="menu_hospital_accounting" />
+        name="Accounts" sequence="3" parent="menu_hospital_accounting" />
+    <menuitem
+        id="menu_hospital_accounting_gl" action="action_custom_general_ledger"
+        name="General Ledger" sequence="4" parent="menu_hospital_accounting" />
     <menuitem id="menu_hospital_accounting_create_accounts" action="create_account_wizard_action"
         name="Create Account" sequence="10" parent="menu_hospital_accounting" />
     <menuitem
         id="menu_fetch_external_data" action="patient_wizard_action"
         name="External Patient" sequence="13" parent="menu_hospital_root" />
 
-</odoo> 
+</odoo>

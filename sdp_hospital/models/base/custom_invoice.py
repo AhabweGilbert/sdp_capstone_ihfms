@@ -8,6 +8,8 @@ from odoo.tools.sql import SQL
 from bisect import bisect_left
 from collections import defaultdict
 import re
+from odoo.addons.sdp_hospital.models.patterns.observer import PaymentObserver
+
 
 class CustomJournal(models.Model):
     _name = "custom.journal"
@@ -24,7 +26,12 @@ class CustomJournal(models.Model):
         ('confirmed', 'Confirmed'),
         ("cancelled", "Cancelled")
     ])
+    journal_type = fields.Selection(selection=[
+        ('invoice', 'Invoice'),
+        ('payment', 'Payment'),
+    ],default='invoice')
     paid = fields.Boolean()
+    journal_lines = fields.Boolean(compute="_compute_journal_lines",store=True)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -44,7 +51,56 @@ class CustomJournal(models.Model):
         self.state = 'cancelled'
 
     def action_register_payment(self):
-        pass
+        self.sudo().write({'paid':True})
+        self.add_payment_journals()
+        # Notify observers after payment registration
+        observer = PaymentObserver()
+        observer.payment_registered(self)
+
+    def add_payment_journals(self):
+        journal = self.env['custom.journal'].sudo().create({
+            'patient_id': self.patient_id.id,
+            'journal_type':'payment',
+            'state':'confirmed',
+        })
+        receivable = self.env['custom.account'].sudo().search([('account_type','=','asset_receivable')],limit=1)
+        cash = self.env['custom.account'].sudo().search([('account_type','=','asset_cash')],limit=1)
+        total = sum([line.total_price for line in self.product_line_ids])
+        self.env['custom.journal.line'].sudo().create({
+            'custom_journal_id':journal.id,
+            'credit':total,
+            'label':"Customer Payment",
+            'account_id':receivable.id,
+        })
+        self.env['custom.journal.line'].sudo().create({
+            'custom_journal_id':journal.id,
+            'debit':total,
+            'label':"Customer Payment",
+            'account_id':cash.id,
+        })
+
+
+    @api.depends('product_line_ids.product_id')
+    def _compute_journal_lines(self):
+        for rec in self:
+            rec.journal_lines = True
+            for each in rec.product_line_ids:
+                receivable = self.env['custom.account'].sudo().search([('account_type','=','asset_receivable')],limit=1)
+                income = self.env['custom.account'].sudo().search([('account_type','=','income')],limit=1)
+
+                self.env['custom.journal.line'].sudo().create({
+                    'custom_journal_id':rec.id,
+                    'debit':each.total_price,
+                    'label':rec.name,
+                    'account_id':receivable.id,
+                })
+                self.env['custom.journal.line'].sudo().create({
+                    'custom_journal_id':rec.id,
+                    'credit':each.total_price,
+                    'label':each.product_id.name,
+                    'account_id':income.id,
+                })
+        
 
 
 class CustomJournalLines(models.Model):
@@ -60,3 +116,4 @@ class CustomJournalLines(models.Model):
         default=lambda self: self.env.company)
     currency_id = fields.Many2one(related="company_id.currency_id",store=True)
     name = fields.Char(related="account_id.name",store=True)
+    label = fields.Char()

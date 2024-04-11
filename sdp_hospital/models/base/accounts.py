@@ -25,6 +25,7 @@ class CustomAccount(models.Model):
             ("asset_receivable", "Receivable"),
             ("liability_payable", "Payable"),
             ("income", "Income"),
+            ("asset_cash", "Cash"),
             ("asset_current", "Current Assets"),
             ("expense", "Expenses"), 
         ],
