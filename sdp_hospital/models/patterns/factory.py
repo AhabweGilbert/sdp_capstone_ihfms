@@ -74,3 +74,38 @@ class PayableFactory(AccountCreatorFactory):
     def create_account(self, **kwargs):
         account = Account(self.env, 'liability_payable', **kwargs)
         return account.create_record()
+
+
+class AccountProductFactory(ABC):
+    def __init__(self, env):
+        self.env = env
+
+    @abstractmethod
+    def add_transaction(self, invoice_journal):
+        pass
+
+class ReceivableConcreteProduct(AccountProductFactory):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def add_transaction(self, invoice_journal):
+        journal = self.env['custom.journal'].sudo().create({
+            'patient_id': invoice_journal.patient_id.id,
+            'journal_type':'payment',
+            'state':'confirmed',
+        })
+        receivable = self.env['custom.account'].sudo().search([('account_type','=','asset_receivable')],limit=1)
+        cash = self.env['custom.account'].sudo().search([('account_type','=','asset_cash')],limit=1)
+        total = sum([line.total_price for line in invoice_journal.product_line_ids])
+        self.env['custom.journal.line'].sudo().create({
+            'custom_journal_id':journal.id,
+            'credit':total,
+            'label':"Customer Payment",
+            'account_id':receivable.id,
+        })
+        self.env['custom.journal.line'].sudo().create({
+            'custom_journal_id':journal.id,
+            'debit':total,
+            'label':"Customer Payment",
+            'account_id':cash.id,
+        })
