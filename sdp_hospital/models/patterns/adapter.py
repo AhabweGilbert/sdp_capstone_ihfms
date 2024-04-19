@@ -1,5 +1,7 @@
 import xml.etree.ElementTree as ET
 from odoo import api, fields, models, _
+from abc import ABC, abstractmethod
+
 
 class ExternalDataAdapter:
     def __init__(self, external_xml):
@@ -39,7 +41,8 @@ class PatientFetchWizard(models.TransientModel):
 
     def create_records_from_external_data(self):
         # Fetch data from the external system
-        external_data = self.fetch_data_from_external_system()
+        external_system = ExternalSystemImplementation()
+        external_data = external_system.fetch_data_from_external_system()
 
         # Convert data using the adapter
         adapter = ExternalDataAdapter(external_data)
@@ -57,6 +60,14 @@ class PatientFetchWizard(models.TransientModel):
                 'view_id':self.env.ref('sdp_hospital.view_medical_patient_form').id,
                 'res_id': patient_record.id,
             }
+
+
+class ExternalSystemInterface(ABC):
+    @abstractmethod
+    def fetch_data_from_external_system(self):
+        pass
+
+class ExternalSystemImplementation(ExternalSystemInterface):
 
     def fetch_data_from_external_system(self):
         # Dummy XML data for demonstration

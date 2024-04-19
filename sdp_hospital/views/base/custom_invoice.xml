@@ -28,13 +28,16 @@
                         invisible="state != 'draft'" type="object" />
                     <button name="action_register_payment" class="btn btn-success"
                         string="Register Payment"
-                        invisible="state != 'confirmed' or paid" type="object" />
+                        invisible="state != 'confirmed' or paid or journal_type == 'payment'"
+                        type="object" />
                     <button name="action_reset_to_draft" string="Reset to Draft"
-                        invisible="state == 'draft' or paid" type="object" />
+                        invisible="state == 'draft' or paid or journal_type == 'payment'"
+                        type="object" />
 
                     <button name="action_cancel" class="btn btn-danger" string="Cancel"
-                        invisible="state != 'draft'"
+                        invisible="state != 'draft' or journal_type == 'payment'"
                         type="object" />
+                    <field name="journal_type" invisible="1" />
                     <field name="state"
                         widget="statusbar" />
                     <field name="paid" invisible="1" />
@@ -69,7 +72,8 @@
                         <!--general
                         information -->
 
-                        <page name="prescriptions" string="Drugs">
+                        <page name="prescriptions" string="Drugs"
+                            invisible="journal_type == 'payment'">
                             <field name="product_line_ids" readonly="state!='draft'">
                                 <tree editable="bottom">
                                     <field name="product_id" string="Drug" />
@@ -139,6 +143,17 @@
             </tree>
         </field>
     </record>
+    <record id="view_custom_invoice_line_filter" model="ir.ui.view">
+        <field name="name">custom.journal.line.select</field>
+        <field name="model">custom.journal.line</field>
+        <field name="arch" type="xml">
+            <search string="General Ledger">
+                <field name="account_id" />
+                <filter string="Account" name='account'
+                    context="{'group_by':'account_id'}" />
+            </search>
+        </field>
+    </record>
     <record id="view_custom_journal_line_tree" model="ir.ui.view">
         <field name="name">custom.journal.line.tree</field>
         <field name="model">custom.journal.line</field>
@@ -154,6 +169,10 @@
                 <field name="credit" sum="Total"
                     options="{'currency_field': 'currency_id'}"
                     widget="monetary" />
+                <field name="balance" sum="Total" invisible="1"
+                    options="{'currency_field': 'currency_id'}"
+                    widget="monetary" />
+
                 <field name="currency_id" column_invisible="1" />
 
 
@@ -196,6 +215,8 @@
         <field name="res_model">custom.journal.line</field>
         <field name="view_mode">tree,form,search</field>
         <field name="view_id" ref="sdp_hospital.view_custom_journal_line_tree" />
+        <field name="context">{'search_default_account':1}</field>
+
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 General Ledger

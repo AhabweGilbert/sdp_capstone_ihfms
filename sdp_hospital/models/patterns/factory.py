@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from abc import ABC, abstractmethod
 
 class Account:
     def __init__(self, env, account_type, **kwargs):
@@ -16,53 +17,60 @@ class Account:
         return account
 
 
-class AccountFactory:
+class AccountCreatorFactory(ABC):
     def __init__(self, env):
         self.env = env
 
+    @abstractmethod
     def create_account(self, account_type, **kwargs):
-        account = Account(self.env, account_type, **kwargs)
+        pass
+
+
+
+class ReceivableFactory(AccountCreatorFactory):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def create_account(self, **kwargs):
+        account = Account(self.env, 'asset_receivable', **kwargs)
         return account.create_record()
 
-
-class ReceivableFactory(AccountFactory):
+class IncomeFactory(AccountCreatorFactory):
     def __init__(self, env):
         super().__init__(env)
 
     def create_account(self, **kwargs):
-        return super().create_account('asset_receivable', **kwargs)
+        account = Account(self.env, 'income', **kwargs)
+        return account.create_record()
 
-class IncomeFactory(AccountFactory):
+class AssetFactory(AccountCreatorFactory):
     def __init__(self, env):
         super().__init__(env)
 
     def create_account(self, **kwargs):
-        return super().create_account('income', **kwargs)
+        account = Account(self.env, 'asset_current', **kwargs)
+        return account.create_record()
 
-class AssetFactory(AccountFactory):
+class ExpenseFactory(AccountCreatorFactory):
     def __init__(self, env):
         super().__init__(env)
 
     def create_account(self, **kwargs):
-        return super().create_account('asset_current', **kwargs)
+        account = Account(self.env, 'expense', **kwargs)
+        return account.create_record()
 
-class ExpenseFactory(AccountFactory):
+class AssetCashFactory(AccountCreatorFactory):
     def __init__(self, env):
         super().__init__(env)
 
     def create_account(self, **kwargs):
-        return super().create_account('expense', **kwargs)
+        account = Account(self.env, 'asset_cash', **kwargs)
+        return account.create_record()
 
-class AssetCashFactory(AccountFactory):
+class PayableFactory(AccountCreatorFactory):
     def __init__(self, env):
         super().__init__(env)
 
     def create_account(self, **kwargs):
-        return super().create_account('asset_cash', **kwargs)
-
-class PayableFactory(AccountFactory):
-    def __init__(self, env):
-        super().__init__(env)
-
-    def create_account(self, **kwargs):
-        return super().create_account('liability_payable', **kwargs)
+        account = Account(self.env, 'liability_payable', **kwargs)
+        return account.create_record()

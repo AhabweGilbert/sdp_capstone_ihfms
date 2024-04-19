@@ -1,9 +1,15 @@
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import ValidationError,RedirectWarning, UserError
 from datetime import datetime, timedelta
+from abc import ABC, abstractmethod
 
-class PaymentObserver:
-    def payment_registered(self, payment_data):
+class ObserverInterface(ABC):
+    @abstractmethod
+    def send_mail(self, data):
+        pass
+
+class PaymentObserver(ObserverInterface):
+    def send_mail(self, payment_data):
         # Method to be called when payment is registered
         # You can implement any action here
         

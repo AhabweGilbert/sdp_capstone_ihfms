@@ -55,7 +55,7 @@ class CustomJournal(models.Model):
         self.add_payment_journals()
         # Notify observers after payment registration
         observer = PaymentObserver()
-        observer.payment_registered(self)
+        observer.send_mail(self)
 
     def add_payment_journals(self):
         journal = self.env['custom.journal'].sudo().create({
@@ -117,3 +117,9 @@ class CustomJournalLines(models.Model):
     currency_id = fields.Many2one(related="company_id.currency_id",store=True)
     name = fields.Char(related="account_id.name",store=True)
     label = fields.Char()
+    balance = fields.Monetary(compute="_compute_balance",store=True)
+
+    @api.depends('debit','credit')
+    def _compute_balance(self):
+        for rec in self:
+            rec.balance = rec.debit - rec.credit

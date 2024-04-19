@@ -17,6 +17,8 @@ class HealthRecord(models.Model):
     procedures = fields.Text()
     prescription_ids = fields.One2many('medical.prescription','health_record_id')
     bill_created = fields.Boolean()
+    custom_journal_id = fields.Many2one('custom.journal')
+
     
     @api.model_create_multi
     def create(self, vals_list):
@@ -34,6 +36,7 @@ class HealthRecord(models.Model):
             each.custom_journal_id = custom_invoice.id
         custom_invoice.action_confirm()
         self.bill_created = True
+        self.custom_journal_id = custom_invoice.id
         return {
                 'name':'Custom Invoice',
                 'res_model':'custom.journal',
@@ -45,5 +48,13 @@ class HealthRecord(models.Model):
         
         # return 
 
-
+    def view_invoice(self):
+        return {
+                'name':'Custom Invoice',
+                'res_model':'custom.journal',
+                'type':'ir.actions.act_window',
+                'view_mode':'form',
+                'view_id':self.env.ref('sdp_hospital.view_custom_invoice_form').id,
+                'res_id': self.custom_journal_id.id,
+            }
    
