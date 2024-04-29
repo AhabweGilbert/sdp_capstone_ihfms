@@ -14,8 +14,8 @@ class EmailManager:
         # Initialize email settings here
         self.smtp_server = 'smtp.gmail.com'
         self.smtp_port = 587
-        self.smtp_username = 'gilbertahabwe5tcha@gmail.com'
-        self.smtp_password = 'wscy lepi raub wkue'
+        self.smtp_username = '********'
+        self.smtp_password = '********'
 
     def send_email(self, to_email, patient_id):
         try:
